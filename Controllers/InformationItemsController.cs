@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,7 +20,7 @@ namespace TodoApi.Controllers
             _context.Add(AboutInformation.Frontend(_context));
             _context.Add(AboutInformation.User(_context));
             _context.Add(AboutInformation.Backend(_context));
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
 
         // GET: api/InformationItems
@@ -86,7 +85,7 @@ namespace TodoApi.Controllers
             _context.InformationItems.Add(informationItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetInformationItem", new { id = informationItem.Id }, informationItem);
+            return CreatedAtAction(nameof(GetInformationItem), new { id = informationItem.Id }, informationItem);
         }
 
         // DELETE: api/InformationItems/5
