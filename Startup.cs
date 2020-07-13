@@ -24,8 +24,8 @@ namespace TodoApi
             services.AddDbContext<InformationContext>(opt => opt.UseInMemoryDatabase("InformationList"));
             services.AddControllers();
 
-            services.AddDbContext<InfcormationContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("InfcormationContext")));
+            services.AddDbContext<InformationContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("InformationContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -18,15 +18,10 @@ namespace TodoApi.Controllers
         public InformationItemsController(InformationContext context)
         {
             _context = context;
-            AddInformationToController(_context);
-        }
-
-        private void AddInformationToController(InformationContext context)
-        {
-            _context.InformationItems.Add(AboutInformation.Frontend(_context));
-            _context.InformationItems.Add(AboutInformation.User(_context));
-            _context.InformationItems.Add(AboutInformation.Backend(_context));
-            _context.SaveChangesAsync();
+            _context.Add(AboutInformation.Frontend(_context));
+            _context.Add(AboutInformation.User(_context));
+            _context.Add(AboutInformation.Backend(_context));
+            _context.SaveChanges();
         }
 
         // GET: api/InformationItems
@@ -38,27 +33,16 @@ namespace TodoApi.Controllers
 
         // GET: api/InformationItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<InformationItem>> GetInformationItem(long id, string name)
+        public async Task<ActionResult<InformationItem>> GetInformationItem(long id)
         {
-            if (id != 0)
-            {
-                var informationItem = await _context.InformationItems.FindAsync(id);
-                if (informationItem == null)
-                {
-                    return NotFound();
-                }
+            var informationItem = await _context.InformationItems.FindAsync(id);
 
-                return informationItem;
-            }
-            else
+            if (informationItem == null)
             {
-                var informationItem = await _context.InformationItems.FindAsync(name);
-                if (informationItem == null)
-                {
-                    return NotFound();
-                }
-                return informationItem;
+                return NotFound();
             }
+
+            return informationItem;
         }
 
         // PUT: api/InformationItems/5
@@ -102,7 +86,7 @@ namespace TodoApi.Controllers
             _context.InformationItems.Add(informationItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetInformationItem), new { id = informationItem.Id }, informationItem);
+            return CreatedAtAction("GetInformationItem", new { id = informationItem.Id }, informationItem);
         }
 
         // DELETE: api/InformationItems/5
