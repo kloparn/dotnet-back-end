@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Newtonsoft.Json;
 using TodoApi.Models;
 
 namespace TodoApi.Controllers
@@ -17,6 +18,7 @@ namespace TodoApi.Controllers
     {
         private readonly GithubContext _context;
         static readonly HttpClient client = new HttpClient();
+
 
         public GithubController(GithubContext context)
         {
@@ -29,9 +31,12 @@ namespace TodoApi.Controllers
         {
             try
             {
+                client.DefaultRequestHeaders.Add("User-Agent", "C#App");
                 HttpResponseMessage rep = await client.GetAsync("https://api.github.com/users/kloparn/repos");
                 rep.EnsureSuccessStatusCode();
-                string repBody = await rep.Content.ReadAsStringAsync();
+                String repBody = await rep.Content.ReadAsStringAsync();
+                GithubItem jsonObject = JsonConvert.DeserializeObject<GithubItem>(repBody);
+                Console.WriteLine(jsonObject.ToString().Split("{, ")[0]);
                 _context.Add(repBody);
                 await _context.SaveChangesAsync();
             }
