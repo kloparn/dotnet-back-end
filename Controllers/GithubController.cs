@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using TodoApi.Models;
 
 namespace TodoApi.Controllers
@@ -14,6 +16,7 @@ namespace TodoApi.Controllers
     public class GithubController : ControllerBase
     {
         private readonly GithubContext _context;
+        static readonly HttpClient client = new HttpClient();
 
         public GithubController(GithubContext context)
         {
@@ -24,6 +27,18 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GithubItem>>> GetGithubItems()
         {
+            try
+            {
+                HttpResponseMessage rep = await client.GetAsync("https://api.github.com/users/kloparn/repos");
+                rep.EnsureSuccessStatusCode();
+                string repBody = await rep.Content.ReadAsStringAsync();
+                _context.Add(repBody);
+                await _context.SaveChangesAsync();
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine(e);
+            }
             return await _context.GithubItems.ToListAsync();
         }
 
