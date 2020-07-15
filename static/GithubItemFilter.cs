@@ -22,7 +22,7 @@ public static class GithubItemFilter
             {
                 // To make it simpler to understand the str.Replace removes the '"' in the string so it does not make uneeded '"'
                 // The str.Substring then later starts the string from where the value is and removes the key value.
-                item.description = str.Replace("\"", "").Substring(17);
+                item.description = str.Replace("\"", "").Substring(16);
             }
             else
             {
