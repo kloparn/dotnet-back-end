@@ -26,13 +26,20 @@ public static class GithubItemFilter
             }
             else
             {
+                // Removing the things that's annoying with an key:value object, so '{,},\n, space, \"', making it easier to read through with a regex match.
                 string cleanedStr = str.Replace("{", "").Replace("\n", "").Replace("}", "").Replace(" ", "").Replace("\"", "");
+
+                // Now this splits the string to values actually possible to check, for example "name:fob" would split to ["name","fob"]
                 string[] splitStr = cleanedStr.Split(":");
 
+                // The regex check to see if the current repository is forked or not.
                 if (RegexCheck(splitStr[0], RegexCategory.Cancel.Value))
                 {
+                    // Checking if the string has more then 1 value, just an error check as the array could only contain 1 string.
                     if (splitStr.Length > 1)
                     {
+                        // Now if the value for the key:"fork" is exactly "true" then it will set the skip to True, then continue out of the loop and return a Null value
+                        // Instead of a GithubItem
                         if (Regex.Match(splitStr[1], @"\btrue\b").Success)
                         {
                             skip = true;
@@ -40,28 +47,54 @@ public static class GithubItemFilter
                         }
                     }
                 }
+
+                // The regex check to see if the current string is "id" 
                 if (RegexCheck(splitStr[0], RegexCategory.Id.Value))
+                    // Checking if the id is set already, as there are 2 ids in a git Repo
                     if (item.id == 0)
+                        // Now taking that id string and parsing it to a Long
                         item.id = long.Parse(splitStr[1]);
+
+                // The regex check to see if the current string is "name"
                 if (RegexCheck(splitStr[0], RegexCategory.Name.Value))
+                    // Checking if the title is set already, as there are more then 1 "name" in a git repo 
                     if (item.title == null)
+                        // If all passes then just set the item's title
                         item.title = splitStr[1];
+
+                // The regex check to see if the current string is "url"
                 if (RegexCheck(splitStr[0], RegexCategory.Url.Value))
+                    // Checking if the url is already set, as there are more then 1 "url" in a git repo
                     if (item.url == null)
+                        // Because a url has ":" inside of it, to work around this issue we cut the strings begining and throw the title on at the end 
+                        // And thus have a proper link.
                         item.url = cleanedStr.Substring(10) + "/" + item.title;
+
+                // The regex check to see if the current string is "created"
                 if (RegexCheck(splitStr[0], RegexCategory.Created.Value))
+                    // Converting the string to a Datetime, because it's split i add the proper 'splitness' back together to get a proper input
                     item.created = Convert.ToDateTime(splitStr[1] + ":" + splitStr[2] + ":" + splitStr[3]);
+
+                // The regex check to see if the current string is "updated"
                 if (RegexCheck(splitStr[0], RegexCategory.Updated.Value))
+                    // Same here as before, i put the string back together for it to convert properly. 
                     item.updated = Convert.ToDateTime(splitStr[1] + ":" + splitStr[2] + ":" + splitStr[3]);
+
+                // The regex check to see if the current string is "language"
                 if (RegexCheck(splitStr[0], RegexCategory.Language.Value))
+                    // Really simple, just setting the language of the application.
                     item.language = splitStr[1];
 
             }
         }
+        // Like before, if the skip Boolean has turned to True, it shall now skip not include whatever it has gotten.
         if (skip)
             return null;
+
+        // Everything went well, and we can now send the item back for it to be sent to the database.
         return item;
     }
 
+    // To reduce the size of all the checks i made a dynamic check for the Regex.Match, taking two strings with a regex filter then returning the Bool of it.
     private static Boolean RegexCheck(string str, string regex) { return Regex.Match(str, regex).Success; }
 }

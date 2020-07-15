@@ -11,6 +11,8 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using TodoApi.Models;
 
+
+
 namespace TodoApi.Controllers
 {
     [Route("api/[controller]")]
@@ -18,6 +20,7 @@ namespace TodoApi.Controllers
     public class GithubController : ControllerBase
     {
         private readonly GithubContext _context;
+        private readonly String url = "https://api.github.com/users/kloparn/repos";
         static readonly HttpClient client = new HttpClient();
 
 
@@ -32,10 +35,17 @@ namespace TodoApi.Controllers
         {
             try
             {
+                // Setting the user-agent head for github so it does not give 403 forbidden error
                 client.DefaultRequestHeaders.Add("User-Agent", "C#App");
-                HttpResponseMessage rep = await client.GetAsync("https://api.github.com/users/kloparn/repos");
+
+                HttpResponseMessage rep = await client.GetAsync(url);
+
+                // Makes sure it gives 200 OK
                 rep.EnsureSuccessStatusCode();
+
                 String repBody = await rep.Content.ReadAsStringAsync();
+
+                // Parsing the rep body string to a object.
                 object jsonObject = JsonConvert.DeserializeObject<object>(repBody);
                 IEnumerable<object> repos = jsonObject as IEnumerable<object>;
                 if (repos != null)
