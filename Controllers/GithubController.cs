@@ -42,58 +42,8 @@ namespace TodoApi.Controllers
                 {
                     foreach (object repo in repos)
                     {
-
-                        GithubItem item = new GithubItem();
-                        bool skip = false;
-                        string stringRepo = repo.ToString();
-                        foreach (string str in stringRepo.Split(","))
-                        {
-                            if (str.Contains("\"description\""))
-                            {
-                                item.description = str.Replace("\"", "").Substring(17);
-                            }
-                            else
-                            {
-                                string cleanedStr = str.Replace("{", "").Replace("\n", "").Replace("}", "").Replace(" ", "").Replace("\"", "");
-                                string[] splitStr = cleanedStr.Split(":");
-                                Match idMatch = Regex.Match(splitStr[0], @"\bid\b");
-                                Match nameMatch = Regex.Match(splitStr[0], @"\bname\b");
-                                Match urlMatch = Regex.Match(splitStr[0], @"\bhtml_url\b");
-                                Match createdMatch = Regex.Match(splitStr[0], @"\bcreated_at\b");
-                                Match updatedMatch = Regex.Match(splitStr[0], @"\bupdated_at\b");
-                                Match languageMatch = Regex.Match(splitStr[0], @"\blanguage\b");
-                                Match cancelMatch = Regex.Match(splitStr[0], @"\bfork\b");
-
-                                if (cancelMatch.Success)
-                                {
-                                    if (splitStr.Length > 1)
-                                    {
-                                        if (Regex.Match(splitStr[1], @"\btrue\b").Success)
-                                        {
-                                            skip = true;
-                                            continue;
-                                        }
-                                    }
-                                }
-                                if (idMatch.Success)
-                                    if (item.id == 0)
-                                        item.id = long.Parse(splitStr[1]);
-                                if (nameMatch.Success)
-                                    if (item.title == null)
-                                        item.title = splitStr[1];
-                                if (urlMatch.Success)
-                                    if (item.url == null)
-                                        item.url = cleanedStr.Substring(10) + "/" + item.title;
-                                if (createdMatch.Success)
-                                    item.created = Convert.ToDateTime(splitStr[1] + ":" + splitStr[2] + ":" + splitStr[3]);
-                                if (updatedMatch.Success)
-                                    item.updated = Convert.ToDateTime(splitStr[1] + ":" + splitStr[2] + ":" + splitStr[3]);
-                                if (languageMatch.Success)
-                                    item.language = splitStr[1];
-
-                            }
-                        }
-                        if (skip)
+                        GithubItem item = GithubItemFilter.filterRepo(repo);
+                        if (item == null)
                             continue;
                         var githubItem = await _context.GithubItems.FindAsync(item.id);
                         if (githubItem == null)
