@@ -39,7 +39,7 @@ namespace TodoApi
 
             app.UseRouting();
 
-            app.UseCors(builder => builder.WithOrigins("https://www.adamhakansson.com"));
+            app.UseCors(builder => builder.WithOrigins("*"));
 
             app.UseAuthorization();
 
