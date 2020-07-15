@@ -68,7 +68,7 @@ public static class GithubItemFilter
                     if (item.url == null)
                         // Because a url has ":" inside of it, to work around this issue we cut the strings begining and throw the title on at the end 
                         // And thus have a proper link.
-                        item.url = cleanedStr.Substring(10) + "/" + item.title;
+                        item.url = cleanedStr.Substring(9) + "/" + item.title;
 
                 // The regex check to see if the current string is "created"
                 if (RegexCheck(splitStr[0], RegexCategory.Created.Value))
