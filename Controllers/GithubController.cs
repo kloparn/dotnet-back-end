@@ -47,25 +47,38 @@ namespace TodoApi.Controllers
 
                 // Parsing the rep body string to a object.
                 object jsonObject = JsonConvert.DeserializeObject<object>(repBody);
+
+                // Making the object loopable by casting it to a IEnumerable
                 IEnumerable<object> repos = jsonObject as IEnumerable<object>;
+
+                // Can be null so doing a check
                 if (repos != null)
                 {
                     foreach (object repo in repos)
                     {
+                        // Filtering so it fits to the custom class
                         GithubItem item = GithubItemFilter.filterRepo(repo);
+
+                        // If the filter returns something that should be skipped
                         if (item == null)
                             continue;
+
+                        // Checking if the item is already added or not, so no ID conflict appears.  
                         var githubItem = await _context.GithubItems.FindAsync(item.id);
                         if (githubItem == null)
                             _context.GithubItems.Add(item);
                     }
                 }
+                // Saving the new github items to the api.
                 await _context.SaveChangesAsync();
             }
             catch (HttpRequestException e)
             {
+                // Debugging if the http request gets a error.
                 Console.WriteLine(e);
             }
+
+            // Converting the githubitems to a list to then be viewed.
             return await _context.GithubItems.ToListAsync();
         }
 
