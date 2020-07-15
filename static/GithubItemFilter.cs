@@ -73,12 +73,12 @@ public static class GithubItemFilter
                 // The regex check to see if the current string is "created"
                 if (RegexCheck(splitStr[0], RegexCategory.Created.Value))
                     // Converting the string to a Datetime, because it's split i add the proper 'splitness' back together to get a proper input
-                    item.created = Convert.ToDateTime(splitStr[1] + ":" + splitStr[2] + ":" + splitStr[3]);
+                    item.created = Convert.ToDateTime(splitStr[1] + ":" + splitStr[2] + ":" + splitStr[3]).ToUniversalTime();
 
                 // The regex check to see if the current string is "updated"
                 if (RegexCheck(splitStr[0], RegexCategory.Updated.Value))
                     // Same here as before, i put the string back together for it to convert properly. 
-                    item.updated = Convert.ToDateTime(splitStr[1] + ":" + splitStr[2] + ":" + splitStr[3]);
+                    item.updated = Convert.ToDateTime(splitStr[1] + ":" + splitStr[2] + ":" + splitStr[3]).ToUniversalTime();
 
                 // The regex check to see if the current string is "language"
                 if (RegexCheck(splitStr[0], RegexCategory.Language.Value))
