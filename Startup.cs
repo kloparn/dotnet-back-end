@@ -24,6 +24,7 @@ namespace TodoApi
             services.AddDbContext<InformationContext>(opt => opt.UseInMemoryDatabase("InformationList"));
             services.AddDbContext<GithubContext>(opt => opt.UseInMemoryDatabase("GithubList"));
             services.AddControllers();
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,6 +38,8 @@ namespace TodoApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(builder => builder.WithOrigins("https://www.adamhakansson.com"));
 
             app.UseAuthorization();
 
