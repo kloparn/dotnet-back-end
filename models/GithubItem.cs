@@ -8,4 +8,5 @@ public class GithubItem
     public DateTime created { get; set; }
     public DateTime updated { get; set; }
     public String language { get; set; }
+    public String homepage { get; set; }
 }

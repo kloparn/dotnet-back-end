@@ -85,6 +85,11 @@ public static class GithubItemFilter
                     // Really simple, just setting the language of the application.
                     item.language = splitStr[1];
 
+                if (RegexCheck(splitStr[0], RegexCategory.Homepage.Value))
+                    if (splitStr[1] != "null")
+                        item.homepage = splitStr[1] + ":" + splitStr[2];
+                    else item.homepage = splitStr[1];
+
             }
         }
         // Like before, if the skip Boolean has turned to True, it shall now skip not include whatever it has gotten.

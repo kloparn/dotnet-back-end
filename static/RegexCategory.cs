@@ -11,4 +11,5 @@ public class RegexCategory
     public static RegexCategory Updated { get { return new RegexCategory(new string(@"\bupdated_at\b")); } }
     public static RegexCategory Language { get { return new RegexCategory(new string(@"\blanguage\b")); } }
     public static RegexCategory Cancel { get { return new RegexCategory(new string(@"\bfork\b")); } }
+    public static RegexCategory Homepage { get { return new RegexCategory(new string(@"\bhomepage\b")); } }
 }
