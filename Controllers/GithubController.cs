@@ -35,6 +35,8 @@ namespace TodoApi.Controllers
         {
             try
             {
+                await _context.Database.EnsureDeletedAsync();
+
                 // Setting the user-agent head for github so it does not give 403 forbidden error
                 client.DefaultRequestHeaders.Add("User-Agent", "C#App");
 
