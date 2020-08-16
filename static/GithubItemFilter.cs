@@ -85,14 +85,18 @@ public static class GithubItemFilter
                     // Really simple, just setting the language of the application.
                     item.language = splitStr[1];
 
+                // The regex check to check the homepage for the current Repo
                 if (RegexCheck(splitStr[0], RegexCategory.Homepage.Value))
+                    // Checking if the website is "null" which means it does not have one at the moment
                     if (splitStr[1] != "null")
-                        item.homepage = splitStr[1] + ":" + splitStr[2];
-                    else item.homepage = splitStr[1];
+                        if (splitStr[1] == "") // Safe check to findout if it's empty, if you save the website as an empty string
+                            item.homepage = "null"; // Because it's empty we set it to "null" instead of giving an empty string
+                        else item.homepage = splitStr[1] + ":" + splitStr[2]; // Returning the actual homepage for the repo
+                    else item.homepage = splitStr[1]; // Returns the "null" value from github.
 
             }
         }
-        // Like before, if the skip Boolean has turned to True, it shall now skip not include whatever it has gotten.
+        // Like before, if the skip Boolean has turned to True, it shall now skip to not include whatever it has gotten.
         if (skip)
             return null;
 
