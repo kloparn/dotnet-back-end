@@ -20,6 +20,7 @@ namespace TodoApi.Controllers
             _context.Add(AboutInformation.Frontend(_context));
             _context.Add(AboutInformation.User(_context));
             _context.Add(AboutInformation.Backend(_context));
+            _context.Add(AboutInformation.VueFrontend(_context));
             _context.SaveChangesAsync();
         }
 
