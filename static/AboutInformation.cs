@@ -30,4 +30,14 @@ public static class AboutInformation
         item.Language = "C#";
         return item;
     }
+    public static InformationItem VueFrontend(InformationContext context)
+    {
+        InformationItem item = new InformationItem();
+        item.Id = context.InformationItems.Local.Count + 1;
+        item.Name = "Vue Frontend";
+        item.Information = "Vue made frontend to showcase my expertise in the Vue framework, further development in the Vue framework will be done here.";
+        item.Framework = "Vue";
+        item.Language = "Vue/Javascript";
+        return item;
+    }
 }
